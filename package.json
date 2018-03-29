@@ -1,0 +1,19 @@
+{
+  "name": "apollo-link-algolia",
+  "version": "0.0.1",
+  "description": "Query Algoila with Apollo",
+  "main": "./src/index.js",
+  "repository": "git@github.com:janowsiany/apollo-link-algolia.git",
+  "author": "Jan Owsiany <jan.owsiany@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "algoliasearch-helper": "^2.24.0",
+    "apollo-link": "^1.2.1",
+    "apollo-utilities": "^1.0.11",
+    "graphql-anywhere": "^4.1.8"
+  },
+  "peerDependencies": {
+    "algoliasearch": "^3.26.0"
+  }
+}
