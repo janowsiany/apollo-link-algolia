@@ -44,7 +44,7 @@ const resolver = (fieldName, root, args, context, info) => {
   const { directives } = info
 
   if (!directives.algolia.index) {
-    throw new Error('Algolia index name is required');
+    throw new Error('Algolia index name is required')
   }
 
   const helper = algoliasearchHelper(context.client, directives.algolia.index)
