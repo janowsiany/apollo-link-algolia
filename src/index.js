@@ -4,28 +4,58 @@ import { addTypenameToDocument, getMainDefinition, hasDirectives } from 'apollo-
 import { ApolloLink, Observable } from 'apollo-link'
 import { graphql } from 'graphql-anywhere/lib/async'
 
+const parameters = [
+  'advancedSyntax',
+  'allowTyposOnNumericTokens',
+  'analytics',
+  'analyticsTags',
+  'aroundLatLng',
+  'aroundLatLngViaIP',
+  'aroundPrecision',
+  'aroundRadius',
+  'attributesToHighlight',
+  'attributesToRetrieve',
+  'attributesToSnippet',
+  'disjunctiveFacets',
+  'distinct',
+  'facets',
+  'getRankingInfo',
+  'hitsPerPage',
+  'ignorePlurals',
+  'insideBoundingBox',
+  'insidePolygon',
+  'maxValuesPerFacet',
+  'minimumAroundRadius',
+  'minWordSizefor1Typo',
+  'minWordSizefor2Typos',
+  'optionalWords',
+  'page',
+  'query',
+  'queryType',
+  'removeWordsIfNoResults',
+  'replaceSynonymsInHighlight',
+  'restrictSearchableAttributes',
+  'synonyms',
+  'tagFilters',
+  'typoTolerance'
+]
+
 const resolver = (fieldName, root, args, context, info) => {
   const { directives } = info
 
   if (!directives.algolia.index) {
-    // todo
+    throw new Error('Algolia index name is required');
   }
 
   const helper = algoliasearchHelper(context.client, directives.algolia.index)
 
-  if (directives.algolia.query) {
-    helper.setQuery(directives.algolia.query)
-  }
+  parameters.forEach(parameter => {
+    if (parameter in directives.algolia) {
+      helper.setQueryParameter(parameter, directives.algolia[parameter])
+    }
+  })
 
-  if (directives.algolia.aroundLatLng) {
-    helper.setQueryParameter('aroundLatLng', directives.algolia.aroundLatLng)
-  }
-
-  if (directives.algolia.aroundRadius) {
-    helper.setQueryParameter('aroundRadius', directives.algolia.aroundRadius)
-  }
-
-  return helper.searchOnce().then(({ content: { hits }}) => hits || null)
+  return helper.searchOnce()
 }
 
 export default class AlgoliaLink extends ApolloLink {
