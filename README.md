@@ -12,12 +12,11 @@ Currently, we support features below:
 * [Example](#example)
 
 ## Installation
-``` shell
-npm i apollo-link-algolia --save
-```
-or
-``` shell
-yarn add apollo-link-algolia -P
+
+```shell
+npm install --save apollo-link-algolia
+# or if you're using yarn
+yarn add apollo-link-algolia
 ```
 
 ## Example

@@ -7,6 +7,12 @@
   "author": "Jan Owsiany <jan.owsiany@gmail.com>",
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "algolia",
+    "apollo",
+    "apollo-link",
+    "graphql"
+  ],
   "dependencies": {
     "algoliasearch-helper": "^2.24.0",
     "apollo-link": "^1.2.1",

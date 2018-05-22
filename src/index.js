@@ -1,5 +1,4 @@
 import algoliasearchHelper from 'algoliasearch-helper'
-
 import { addTypenameToDocument, getMainDefinition, hasDirectives } from 'apollo-utilities'
 import { ApolloLink, Observable } from 'apollo-link'
 import { graphql } from 'graphql-anywhere/lib/async'
