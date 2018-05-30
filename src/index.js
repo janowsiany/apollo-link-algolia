@@ -18,6 +18,7 @@ const parameters = [
   'disjunctiveFacets',
   'distinct',
   'facets',
+  'filters',
   'getRankingInfo',
   'hitsPerPage',
   'ignorePlurals',
