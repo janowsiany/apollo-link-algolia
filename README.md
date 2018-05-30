@@ -9,7 +9,7 @@ Currently, we support features below:
 
 ## Contents
 * [Installation](#installation)
-* [Example](#example)
+* [Quickstart](#Quickstart)
 
 ## Installation
 
@@ -19,11 +19,23 @@ npm install --save apollo-link-algolia
 yarn add apollo-link-algolia
 ```
 
-## Example
+## Quickstart
+
 ```js
+const algoliaClient = algoliasearch('APPLICATION_ID', 'API_KEY')
+
+const algoliaLink = new AlgoliaLink({ client: algoliaClient })
+
+const client = new ApolloClient({
+  link: algoliaLink,
+  cache: new InMemoryCache()
+})
+
 const LOCATIONS_QUERY = gql`
   query LocationsQuery {
-    locationsInRadius @algolia(index: "dev_LOCATIONS", aroundLatLng: "40.71, -74.01", aroundRadius: 1000)
+    locationsInRadius @algolia(index: "INDEX_NAME", aroundLatLng: "40.71, -74.01", aroundRadius: 1000)
   }
 `
+
+client.query({ query: LOCATIONS_QUERY }).then(response => console.log(response))
 ```
