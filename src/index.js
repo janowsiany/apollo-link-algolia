@@ -1,6 +1,6 @@
 import algoliasearchHelper from 'algoliasearch-helper'
-import { addTypenameToDocument, getMainDefinition, hasDirectives } from 'apollo-utilities'
 import { ApolloLink, Observable } from 'apollo-link'
+import { addTypenameToDocument, getMainDefinition, hasDirectives } from 'apollo-utilities'
 import { graphql } from 'graphql-anywhere/lib/async'
 
 const parameters = [
@@ -40,8 +40,16 @@ const parameters = [
   'typoTolerance'
 ]
 
+const addTypeNameToResult = (result, __typename = 'AlgoliaQuery') =>  ({ __typename, ...result.content })
+
 const resolver = (fieldName, root, args, context, info) => {
-  const { directives } = info
+  const { directives, isLeaf, resultKey } = info
+
+  const isNotAlgoliaQuery = !directives || !directives.algolia
+  if (isLeaf || isNotAlgoliaQuery) {
+    const returnValue = (root || {})[resultKey] || (root || {})[fieldName]
+    return returnValue !== undefined ? returnValue : null
+  }
 
   if (!directives.algolia.index) {
     throw new Error('Algolia index name is required')
@@ -55,7 +63,7 @@ const resolver = (fieldName, root, args, context, info) => {
     }
   })
 
-  return helper.searchOnce()
+  return helper.searchOnce().then(result => addTypeNameToResult(result))
 }
 
 export default class AlgoliaLink extends ApolloLink {

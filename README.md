@@ -9,7 +9,7 @@ Currently, we support features below:
 
 ## Contents
 * [Installation](#installation)
-* [Quickstart](#Quickstart)
+* [Usage](#Usage)
 
 ## Installation
 
@@ -19,7 +19,11 @@ npm install --save apollo-link-algolia
 yarn add apollo-link-algolia
 ```
 
-## Quickstart
+## Usage
+
+### Basic
+
+To get the results of your request, query for `hits` field
 
 ```js
 const algoliaClient = algoliasearch('APPLICATION_ID', 'API_KEY')
@@ -33,9 +37,36 @@ const client = new ApolloClient({
 
 const LOCATIONS_QUERY = gql`
   query LocationsQuery {
-    locationsInRadius @algolia(index: "INDEX_NAME", aroundLatLng: "40.71, -74.01", aroundRadius: 1000)
+    locationsInRadius @algolia(index: "INDEX_NAME", aroundLatLng: "40.71, -74.01", aroundRadius: 1000) {
+        hits
+    }
   }
 `
 
 client.query({ query: LOCATIONS_QUERY }).then(response => console.log(response))
+
+### Query meta fields
+Aside from the `hits` field, the result may contain several other fields that contain meta information:
+* `aroundLatLng`
+* `automaticRadius`
+* `disjunctiveFacets`
+* `exhaustiveFacetsCount`
+* `exhaustiveNbHits`
+* `facets`
+* `hierarchicalFacets`
+* `hitsPerPage`
+* `index`
+* `nbHits`
+* `nbPages`
+* `page`
+* `parsedQuery`
+* `processingTimeMS`
+* `query`
+* `queryID`
+* `serverUsed`
+* `timeoutCounts`
+* `timeoutHits`
+* `userData`
+* `_rawResults`
+* `_state`
 ```
