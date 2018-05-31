@@ -20,7 +20,6 @@ yarn add apollo-link-algolia
 ```
 
 ## Usage
-
 ### Basic
 
 To get the results of your request, query for `hits` field
@@ -41,10 +40,10 @@ const LOCATIONS_QUERY = gql`
         hits
     }
   }
-`
+
 
 client.query({ query: LOCATIONS_QUERY }).then(response => console.log(response))
-
+```
 ### Query meta fields
 Aside from the `hits` field, the result may contain several other fields that contain meta information:
 * `aroundLatLng`
@@ -69,4 +68,3 @@ Aside from the `hits` field, the result may contain several other fields that co
 * `userData`
 * `_rawResults`
 * `_state`
-```
