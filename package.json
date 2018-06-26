@@ -2,7 +2,7 @@
   "name": "apollo-link-algolia",
   "version": "0.0.4",
   "description": "Query Algoila with Apollo",
-  "main": "./src/index.js",
+  "main": "./lib/index.js",
   "repository": "git@github.com:janowsiany/apollo-link-algolia.git",
   "author": "Jan Owsiany <jan.owsiany@gmail.com>",
   "license": "MIT",
@@ -14,8 +14,9 @@
     "graphql"
   ],
   "scripts": {
+    "prepublish": "babel src --out-dir lib --ignore '**/__tests__'",
     "precommit": "lint-staged",
-    "test": "jest --no-cache"
+    "test": "jest"
   },
   "dependencies": {
     "algoliasearch-helper": "^2.24.0",
@@ -28,6 +29,7 @@
     "algoliasearch": "^3.26.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^8.2.5",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.0.1",
