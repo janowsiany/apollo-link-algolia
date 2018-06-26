@@ -40,7 +40,7 @@ const parameters = [
   'typoTolerance'
 ]
 
-const addTypeNameToResult = (result, __typename = 'AlgoliaQuery') =>  ({ __typename, ...result.content })
+const addTypeNameToResult = (result, __typename = 'AlgoliaQuery') => Object.assign({}, result.content, { __typename })
 
 const resolver = (fieldName, root, args, context, info) => {
   const { directives, isLeaf, resultKey } = info
@@ -86,20 +86,14 @@ export default class AlgoliaLink extends ApolloLink {
     }
 
     return new Observable(observer => {
-      graphql(
-        resolver,
-        addTypenameToDocument(operation.query),
-        {},
-        context,
-        operation.variables
-      )
-      .then(data => {
-        observer.next({ data })
-        observer.complete()
-      })
-      .catch(error => {
-        observer.error(error)
-      })
+      graphql(resolver, addTypenameToDocument(operation.query), {}, context, operation.variables)
+        .then(data => {
+          observer.next({ data })
+          observer.complete()
+        })
+        .catch(error => {
+          observer.error(error)
+        })
     })
   }
 }
