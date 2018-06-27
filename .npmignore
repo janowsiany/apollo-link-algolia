@@ -1,2 +1,6 @@
 src
 demo
+.babelrc
+.eslintrc
+.prettierrc
+LICENSE
