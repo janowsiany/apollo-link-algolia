@@ -40,7 +40,7 @@ const LOCATIONS_QUERY = gql`
         hits
     }
   }
-
+`
 
 client.query({ query: LOCATIONS_QUERY }).then(response => console.log(response))
 ```
