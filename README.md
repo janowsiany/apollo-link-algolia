@@ -51,7 +51,6 @@ type Query {
 }
 
 input AlgoliaQuery {
-    index: String!
     query: String!
 }
 
@@ -66,7 +65,6 @@ type AlgoliaQueryResult {
 }
 
 type AlgoliaQueryResultHits {
-    createdAt: Int
     name: String
 }
 
@@ -78,7 +76,6 @@ const QUERY = gql`
         hitsPerPage
         hits @type(name: AlgoliaQueryResultHits) {
           name
-          createdAt
         }
       }
     }
