@@ -40,30 +40,46 @@ const parameters = [
   'typoTolerance'
 ]
 
-const addTypeNameToResult = (result, __typename = 'AlgoliaQuery') => Object.assign({}, result.content, { __typename })
+const prettifyResult = ({ result, type: __typename = 'AlgoliaQuery' }) =>
+  Object.assign({}, result.content ? result.content : result, { __typename })
+
+const hasIndex = directives => {
+  const { queries, index } = directives.algolia
+
+  return index || (Array.isArray(queries) && queries.every(q => q.indexName))
+}
 
 const resolver = (fieldName, root, args, context, info) => {
   const { directives, isLeaf, resultKey } = info
-
   const isNotAlgoliaQuery = !directives || !directives.algolia
+
   if (isLeaf || isNotAlgoliaQuery) {
     const returnValue = (root || {})[resultKey] || (root || {})[fieldName]
+
     return returnValue !== undefined ? returnValue : null
   }
 
-  if (!directives.algolia.index) {
+  if (!hasIndex(directives)) {
     throw new Error('Algolia index name is required')
   }
 
   const helper = algoliasearchHelper(context.client, directives.algolia.index)
 
+  // Multiple queries
+  if (directives.algolia.queries) {
+    return helper.client
+      .multipleQueries(directives.algolia.queries)
+      .then(result => prettifyResult({ result, type: directives.algolia.type }))
+  }
+
+  // Single query
   parameters.forEach(parameter => {
     if (parameter in directives.algolia) {
       helper.setQueryParameter(parameter, directives.algolia[parameter])
     }
   })
 
-  return helper.searchOnce().then(result => addTypeNameToResult(result))
+  return helper.searchOnce().then(result => prettifyResult({ result, type: directives.algolia.type }))
 }
 
 export default class AlgoliaLink extends ApolloLink {

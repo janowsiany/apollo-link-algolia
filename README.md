@@ -34,7 +34,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 })
 
-const LOCATIONS_QUERY = gql`
+// Simple query example
+const QUERY = gql`
   query LocationsQuery {
     locationsInRadius @algolia(index: "INDEX_NAME", aroundLatLng: "40.71, -74.01", aroundRadius: 1000) {
         hits
@@ -42,8 +43,69 @@ const LOCATIONS_QUERY = gql`
   }
 `
 
-client.query({ query: LOCATIONS_QUERY }).then(response => console.log(response))
+client.query({ query: QUERY }).then(response => console.log(response))
+
+// Multiple queries example
+type Query {
+    algoliaQueries(queries: [AlgoliaQuery]): [AlgoliaQueryData!]!
+}
+
+input AlgoliaQuery {
+    query: String!
+}
+
+type AlgoliaQueryData {
+    result: [AlgoliaQueryResult]!
+}
+
+type AlgoliaQueryResult {
+    nbHits: Int
+    hitsPerPage: Int
+    hits: AlgoliaQueryResultHits
+}
+
+type AlgoliaQueryResultHits {
+    name: String
+}
+
+const QUERY = gql`
+  query algoliaQueries($queries: [AlgoliaQuery]) {
+    algoliaQueries @algolia(type: "AlgoliaQueryData", queries: $queries) {
+      results @type(name: AlgoliaQueryResult) {
+        nbHits
+        hitsPerPage
+        hits @type(name: AlgoliaQueryResultHits) {
+          name
+        }
+      }
+    }
+  }
+`
+
+const queries = [{
+  indexName: 'categories',
+  query: 'search in categories index',
+  params: {
+    hitsPerPage: 3
+  }
+}, {
+  indexName: 'products',
+  query: 'first search in products',
+  params: {
+    hitsPerPage: 3,
+    filters: '_tags:promotion'
+  }
+}, {
+  indexName: 'products',
+  query: 'another search in products',
+  params: {
+    hitsPerPage: 10
+  }
+}];
+
+client.query({ query: QUERY, variables: { queries } }).then(response => console.log(response))
 ```
+
 ### Query meta fields
 Aside from the `hits` field, the result may contain several other fields that contain meta information:
 * `aroundLatLng`
